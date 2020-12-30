@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 
 BASE_URL = 'https://api-ssl.bitly.com/v4'
 
-def shorten_link(BITLY_TOKEN, user_input):
+def shorten_link(bitly_token, user_input):
     address = '/shorten'
     full_url = f'{BASE_URL}{address}'
     headers = {
-        'Authorization': f'Bearer {BITLY_TOKEN}'
+        'Authorization': f'Bearer {bitly_token}'
     }
     payload = {
         'long_url': user_input
@@ -21,10 +21,10 @@ def shorten_link(BITLY_TOKEN, user_input):
     short_url = response.json()
     return short_url['link']
 
-def count_clicks(BITLY_TOKEN, parsed_url):
+def count_clicks(bitly_token, parsed_url):
     address = f'/bitlinks/{parsed_url}/clicks/summary'
     headers = {
-        'Authorization': f'Bearer {BITLY_TOKEN}'
+        'Authorization': f'Bearer {bitly_token}'
     }
     parameters = {
         'unit': 'day', 
@@ -41,11 +41,11 @@ def cut_url_prefix(user_input):
     parsed_url = f'{parse_url.netloc}{parse_url.path}'
     return parsed_url
 
-def check_for_bitlink(BITLY_TOKEN, parsed_url):
+def check_for_bitlink(bitly_token, parsed_url):
     address = f'/bitlinks/{parsed_url}'
     full_url = f'{BASE_URL}{address}'
     headers = {
-        'Authorization': f'Bearer {BITLY_TOKEN}'
+        'Authorization': f'Bearer {bitly_token}'
     }
     response = requests.get(full_url, headers=headers)
     return response.ok
@@ -55,7 +55,9 @@ def createParser():
     parser.add_argument ('url', nargs='?')
     return parser
 
-def main(bitly_token):
+def main():
+    load_dotenv()
+    bitly_token = os.getenv('BITLY_TOKEN')
     parser = createParser()
     urlspace = parser.parse_args()
     if check_for_bitlink(bitly_token, cut_url_prefix(urlspace.url)):
@@ -72,6 +74,4 @@ def main(bitly_token):
             exit('Не могу получить данные с сервера:\n{0}'.format(error))
 
 if __name__ == '__main__':
-    load_dotenv()
-    bitly_token = os.getenv('BITLY_TOKEN')
-    main(bitly_token)
+    main()
