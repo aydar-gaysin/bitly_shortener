@@ -3,7 +3,7 @@ import os
 import requests
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-load_dotenv()
+
 
 BITLY_TOKEN = os.getenv('BITLY_TOKEN')
 BASE_URL = 'https://api-ssl.bitly.com/v4'
@@ -56,21 +56,23 @@ def createParser():
     parser.add_argument ('url', nargs='?')
     return parser
 
-def main():
+def main(bitly_token):
     parser = createParser()
     urlspace = parser.parse_args()
-    if check_for_bitlink(BITLY_TOKEN, cut_url_prefix(urlspace.url)):
+    if check_for_bitlink(bitly_token, cut_url_prefix(urlspace.url)):
         try:
-            clicks_count = count_clicks(BITLY_TOKEN, cut_url_prefix(urlspace.url))
+            clicks_count = count_clicks(bitly_token, cut_url_prefix(urlspace.url))
             print('Кликов: ', clicks_count)
         except requests.exceptions.HTTPError as error:
             exit('Не могу получить данные о количестве кликов:\n{0}'.format(error))
     else:
         try:
-            bitlink = shorten_link(BITLY_TOKEN, urlspace.url)
+            bitlink = shorten_link(bitly_token, urlspace.url)
             print('Битлинк: ', bitlink)
         except requests.exceptions.HTTPError as error:
             exit('Не могу получить данные с сервера:\n{0}'.format(error))
 
 if __name__ == '__main__':
-    main()
+    load_dotenv()
+    bitly_token = os.getenv('BITLY_TOKEN')
+    main(bitly_token)
