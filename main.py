@@ -57,7 +57,6 @@ def createParser():
     return parser
 
 def main():
-    # user_input = input('Введите ссылку: ')
     parser = createParser()
     urlspace = parser.parse_args()
     if check_for_bitlink(BITLY_TOKEN, cut_url_prefix(urlspace.url)):
