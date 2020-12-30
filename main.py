@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 
-BITLY_TOKEN = os.getenv('BITLY_TOKEN')
 BASE_URL = 'https://api-ssl.bitly.com/v4'
 
 def shorten_link(BITLY_TOKEN, user_input):
