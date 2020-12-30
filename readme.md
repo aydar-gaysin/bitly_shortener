@@ -22,7 +22,7 @@ pip install -r requirements.txt
 ```
 Create .env file and put in your [Bitly GENERIC ACCESS TOKEN](https://bitly.com/a/oauth_apps)
 ```
-BITLY_TOKEN=
+BITLY_TOKEN=<Your token here>
 ``` 
 ## How to use
 
